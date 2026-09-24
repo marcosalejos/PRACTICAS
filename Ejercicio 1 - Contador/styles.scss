@@ -4,12 +4,52 @@
 // 1. Cambia el color de fondo de todo el documento (piensa en qué elemento envuelve
 //    toda la página).
 
+.body {
+    background-color: blueviolet;
+}
+
 // 2. Centra el contenedor del contador tanto en horizontal como en vertical dentro
 //    de toda la pantalla. Pista: investiga la propiedad "display: flex" y sus
 //    propiedades relacionadas para alinear y ordenar el contenido en columna.
 
+.count {
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
 // 3. Da estilo a los botones: color de fondo, color de texto, bordes, espaciado
 //    interior (padding) y un cursor que indique que son clicables.
 
+.count #add {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.count #reset {
+  background-color: #4c4eaf;
+  color: black;
+  margin-top: 10px;
+  padding: 10px 10px;
+  box-shadow: 3px 3px grey;
+  cursor: pointer;
+}
+
 // 4. Añade un efecto visual cuando el ratón pasa por encima de los botones
 //    (investiga el pseudo-selector ":hover").
+
+.count #add:hover {
+    background-color: #7d9720; 
+    color: rgb(233, 155, 10);
+}
+
+.count #reset:hover {
+    background-color: #972065; 
+    color: white;
+}
