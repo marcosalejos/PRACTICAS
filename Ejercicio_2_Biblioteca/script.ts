@@ -1,11 +1,9 @@
-//import {v4 as uuidv4} from 'uuid';
-    //let myuuid = uuidv4();
+//let myuuid = uuidv4();
 
 // TODO: Simulador de biblioteca con Programación Orientada a Objetos en TypeScript.
 // Recuerda: el navegador NO entiende TypeScript. Deja "tsc --watch" corriendo en la
 // terminal para que cada vez que guardes se genere script.js automáticamente.
 // Todo lo que muestres con console.log() lo verás en la consola del navegador (F12).
-
 
 // ───────────────────────────── INTERFAZ DATOSLIBRO ─────────────────────────────
 
@@ -15,11 +13,10 @@
 //    La usarás en el método actualizarLibro() de la Biblioteca.
 
 interface DatosLibro {
-    titulo: string,
-    autor: string,
-    anio: number
+  titulo: string;
+  autor: string;
+  anio: number;
 }
-
 
 // ─────────────────────────────── CLASE LIBRO ───────────────────────────────
 
@@ -30,72 +27,68 @@ interface DatosLibro {
 //    - anio      → number
 //    - disponible → boolean
 
-class Libro{
+class Libro {
+  readonly id: number;
+  titulo: string;
+  autor: string;
+  anio: number;
+  disponible: boolean = true;
 
-    readonly id: number;
-    titulo: string;
-    autor: string;
-    anio: number;
-    disponible: boolean = true;
+  // 3. Crea su constructor. Debe recibir id, titulo, autor y anio (¡con sus tipos!).
+  //    Guarda cada uno en el objeto usando "this".
+  //    El campo "disponible" NO se recibe: todo libro nuevo empieza disponible (true).
 
+  constructor(id: number, titulo: string, autor: string, anio: number) {
+    this.id = id;
+    this.titulo = titulo;
+    this.autor = autor;
+    this.anio = anio;
+  }
 
-// 3. Crea su constructor. Debe recibir id, titulo, autor y anio (¡con sus tipos!).
-//    Guarda cada uno en el objeto usando "this".
-//    El campo "disponible" NO se recibe: todo libro nuevo empieza disponible (true).
+  // 4. Método prestar(): no devuelve nada (investiga el tipo "void").
+  //    Si el libro ya está prestado, avisa por consola. Si no, cambia "disponible" a false.
 
-    constructor(id: number, titulo: string, autor: string, anio: number){
-        this.id = id;
-        this.titulo = titulo;
-        this.autor = autor;
-        this.anio = anio;
+  prestar(): void {
+    if (!this.disponible) {
+      console.log("El libro ya está prestado");
+    } else {
+      this.disponible = false;
+      console.log("El libro ha sido prestado");
+    }
+  }
+
+  // 5. Método devolver(): también void.
+  //    Si el libro ya está disponible, avisa por consola. Si no, cambia "disponible" a true.
+
+  devolver(): void {
+    if (this.disponible) {
+      console.log("El libro ya estaba disponible");
+    } else {
+      this.disponible = true;
+      console.log("El libro ha sido devuelto y está disponible");
+    }
+  }
+
+  // 6. Método describir(): DEVUELVE (return) un string con los datos del libro, por ejemplo:
+  //    "[1] El Quijote - Miguel de Cervantes (1605) - ✅ Disponible"
+  //    "[2] 1984 - George Orwell (1949) - ❌ Prestado"
+
+  describir(): string {
+    return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.consultarDisponibilidad()}`;
+  }
+
+  consultarDisponibilidad(): string {
+    // El ternario quedaría así:
+    let resultado: string; // return this.disponible ? 'Disponible' : 'Prestado';
+
+    if (this.disponible) {
+      resultado = "Disponible";
+    } else {
+      resultado = "Prestado";
     }
 
-// 4. Método prestar(): no devuelve nada (investiga el tipo "void").
-//    Si el libro ya está prestado, avisa por consola. Si no, cambia "disponible" a false.
-
-    prestar(): void{
-        if (!this.disponible){
-            console.log('El libro ya está prestado');
-
-        }else{
-            this.disponible = false;
-            console.log('El libro ha sido prestado');
-        }
-    }
-
-// 5. Método devolver(): también void.
-//    Si el libro ya está disponible, avisa por consola. Si no, cambia "disponible" a true.
-
-    devolver(): void{
-        if(this.disponible){
-            console.log('El libro ya estaba disponible')
-
-        }else{
-            this.disponible = true
-            console.log('El libro ha sido devuelto y está disponible')
-        }
-    }
-
-// 6. Método describir(): DEVUELVE (return) un string con los datos del libro, por ejemplo:
-//    "[1] El Quijote - Miguel de Cervantes (1605) - ✅ Disponible"
-//    "[2] 1984 - George Orwell (1949) - ❌ Prestado"
-
-    describir(): string{
-        return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.consultarDisponibilidad()}`;
-    }
-
-    consultarDisponibilidad(): string{   // El ternario quedaría así:
-        let resultado :string;           // return this.disponible ? 'Disponible' : 'Prestado';
-
-        if(this.disponible){
-            resultado = 'Disponible';
-
-        }else{
-            resultado = 'Prestado';
-        }
-
-        return resultado;
-    }
+    return resultado;
+  }
 }
 
 // 👉 Antes de seguir, prueba aquí tu clase Libro: crea un libro, muéstralo con
@@ -108,7 +101,7 @@ let contador = 0;
 
 // Libro 1
         //const -> impide reasignar la variable, es decir, hacer que apunte a otro objeto. No impide modificar el objeto al que apunta.
-const libro1 = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);  
+const libro1 = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);
 console.log(libro1.describir());
 libro1.prestar();
 console.log(libro1.describir());
@@ -137,32 +130,31 @@ function asignarID(): number{
 //      los métodos de la biblioteca.
 
 class Biblioteca {
+  nombre: string;
+  private libros: Libro[] = []; // Crear una lista 'libros' que almacena objetos de tipo Libro, la inicializamos vacía
 
-    nombre: string;
-    private libros: Libro[] = []; // Crear una lista 'libros' que almacena objetos de tipo Libro, la inicializamos vacía
+  // 8. Crea su constructor. Solo recibe el nombre.
+  //    La lista de libros empieza vacía.
 
-// 8. Crea su constructor. Solo recibe el nombre.
-//    La lista de libros empieza vacía.
+  constructor(nombre: string) {
+    this.nombre = nombre;
+  }
 
-    constructor(nombre: string){
-        this.nombre = nombre;
+  // 9. Método buscarLibro(id: number): devuelve el Libro con ese id, o null si no existe.
+  //    El tipo de retorno debe reflejar las dos posibilidades (investiga "Libro | null").
+  //    (Empieza por este: casi todos los demás lo van a usar.)
+
+  buscarLibro(id: number): Libro | null {
+    for (let i = 0; i < this.libros.length; i++) {
+      if (this.libros[i].id === id) {
+        // .id: acceder a una propiedad de un objeto
+        return this.libros[i]; // Se accede al id del Libro ubicado en la posición i del array libros.
+      } // === Igualdad estricta, compara valor y tipo -> 6 es distinto (!==) de "6"
     }
+    return null; // En caso de que no se haya encontrado ningún libro en el for, se devuelve null
+  }
 
-// 9. Método buscarLibro(id: number): devuelve el Libro con ese id, o null si no existe.
-//    El tipo de retorno debe reflejar las dos posibilidades (investiga "Libro | null").
-//    (Empieza por este: casi todos los demás lo van a usar.)
-
-    buscarLibro(id: number): Libro | null{
-        for(let i = 0; i < this.libros.length; i++){
-
-            if (this.libros[i].id === id){     // .id: acceder a una propiedad de un objeto
-                return this.libros[i];         // Se accede al id del Libro ubicado en la posición i del array libros.
-            }                                  // === Igualdad estricta, compara valor y tipo -> 6 es distinto (!==) de "6"   
-        }
-        return null;    // En caso de que no se haya encontrado ningún libro en el for, se devuelve null
-    }
-
-    /* Opción con el método find
+  /* Opción con el método find
 
     buscarLibro(id: number): Libro | null {
         return this.libros.find(libro => libro.id === id) ?? null;
@@ -172,29 +164,30 @@ class Biblioteca {
     Si no encuentra ningún Libro devuelve undefined, el operador ?? convierte undefined en null.
     */
 
-// 10. Método agregarLibro(libro: Libro): void.
-//     Si ya existe un libro con ese id, avisa y no lo añadas. Si no, añádelo a la lista.
+  // 10. Método agregarLibro(libro: Libro): void.
+  //     Si ya existe un libro con ese id, avisa y no lo añadas. Si no, añádelo a la lista.
 
-    agregarLibro(libro: Libro): void{
-        this.buscarLibro(libro.id) ? console.log('Ya existe un libro con ese ID') : this.libros.push(libro);
-    }
-    // El método .push() añade elementos al final de array. Puede añadir más de un elemento libros.push(Libro6, Libro7, Libro8)
+  agregarLibro(libro: Libro): void {
+    this.buscarLibro(libro.id)
+      ? console.log("Ya existe un libro con ese ID")
+      : this.libros.push(libro);
+  }
+  // El método .push() añade elementos al final de array. Puede añadir más de un elemento libros.push(Libro6, Libro7, Libro8)
 
-// 11. Método listarLibros(): void.
-//     Si no hay libros, muestra un mensaje. Si hay, muestra el describir() de cada uno.
+  // 11. Método listarLibros(): void.
+  //     Si no hay libros, muestra un mensaje. Si hay, muestra el describir() de cada uno.
 
-// 12. Método actualizarLibro(id: number, nuevosDatos: DatosLibro): void.
-//     nuevosDatos es un objeto, por ejemplo { titulo: "Otro título", anio: 2001 }.
-//     Cambia solo los campos que vengan (los que no vengan serán undefined).
-//     Si el libro no existe, avisa.
+  // 12. Método actualizarLibro(id: number, nuevosDatos: DatosLibro): void.
+  //     nuevosDatos es un objeto, por ejemplo { titulo: "Otro título", anio: 2001 }.
+  //     Cambia solo los campos que vengan (los que no vengan serán undefined).
+  //     Si el libro no existe, avisa.
 
-// 13. Método eliminarLibro(id: number): void.
-//     Quita el libro de la lista. Si no existe, avisa.
+  // 13. Método eliminarLibro(id: number): void.
+  //     Quita el libro de la lista. Si no existe, avisa.
 
-// 14. Método cambiarDisponibilidad(id: number, disponible: boolean): void.
-//     Si "disponible" es false, presta el libro; si es true, lo devuelve.
-//     Reutiliza prestar() y devolver(). Si el libro no existe, avisa.
-
+  // 14. Método cambiarDisponibilidad(id: number, disponible: boolean): void.
+  //     Si "disponible" es false, presta el libro; si es true, lo devuelve.
+  //     Reutiliza prestar() y devolver(). Si el libro no existe, avisa.
 }
 
 // ─────────────────────────────────── PRUEBA ───────────────────────────────────

@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
   }
 }
