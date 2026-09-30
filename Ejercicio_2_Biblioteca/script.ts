@@ -13,9 +13,9 @@
 //    La usarás en el método actualizarLibro() de la Biblioteca.
 
 interface DatosLibro {
-  titulo: string;
-  autor: string;
-  anio: number;
+  titulo?: string;
+  autor?: string;
+  anio?: number;
 }
 
 // ─────────────────────────────── CLASE LIBRO ───────────────────────────────
@@ -73,22 +73,9 @@ class Libro {
   //    "[1] El Quijote - Miguel de Cervantes (1605) - ✅ Disponible"
   //    "[2] 1984 - George Orwell (1949) - ❌ Prestado"
 
-  describir(): string {
+  describir(): string {                                                 // Comprobar si está disponible con un ternario
     return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.disponible ? "Disponible" : "Prestado"}`;
-  }
-
-  consultarDisponibilidad(): string {
-    // // El ternario quedaría así:
-    // let resultado: string; // return this.disponible ? 'Disponible' : 'Prestado';
-
-    if (this.disponible) {
-      return "Disponible";
-    } else {
-      return "Prestado";
-    }
-
-    // return resultado;
-  }
+  }     
 }
 
 // 👉 Antes de seguir, prueba aquí tu clase Libro: crea un libro, muéstralo con
@@ -99,19 +86,18 @@ class Libro {
 // Variable para asignar ID
 let contador = 0;
 
-// Libro 1
-        //const -> impide reasignar la variable, es decir, hacer que apunte a otro objeto. No impide modificar el objeto al que apunta.
-const libro1 = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);
+// Libro1
+let libro1 = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);
 console.log(libro1.describir());
 libro1.prestar();
 console.log(libro1.describir());
 
 // Libro2
-const libro2 = new Libro(asignarID(), "1984", "George Orwell", 1949);
+let libro2 = new Libro(asignarID(), "1984", "George Orwell", 1949);
 console.log(libro2.describir())
 
-//Libro2
-const libro3 = new Libro(asignarID(), "Título libro3", "Agustin", 2015);
+//Libro3
+let libro3 = new Libro(asignarID(), "Título libro3", "Agustin", 2015);
 console.log(libro3.describir())
 
 // Función para asignar ID
@@ -178,10 +164,35 @@ class Biblioteca {
   // 11. Método listarLibros(): void.
   //     Si no hay libros, muestra un mensaje. Si hay, muestra el describir() de cada uno.
 
+  listarLibros(): void{
+    this.libros.length === 0 
+    ? console.log('No hay libros en la biblioteca') 
+    : this.libros.forEach(libro => console.log(libro.describir()));
+  }
+    // Se comprueba si la lista está vacía mediante su longitud, no existe el método .isEmpty()
+    // Se recorre la lista mediante forEach, el cual espera una función (flecha) que ejecuta en cada libro de la lista.
+
   // 12. Método actualizarLibro(id: number, nuevosDatos: DatosLibro): void.
   //     nuevosDatos es un objeto, por ejemplo { titulo: "Otro título", anio: 2001 }.
   //     Cambia solo los campos que vengan (los que no vengan serán undefined).
   //     Si el libro no existe, avisa.
+
+  actualizarLibro(id: number, nuevosDatos: DatosLibro): void{
+    if (this.buscarLibro(id) === null){
+      console.log('El libro que se quiere actualizar no existe')
+    }else{
+      if (nuevosDatos.titulo){
+        this.buscarLibro(id).titulo = nuevosDatos.titulo;
+      }
+      if(nuevosDatos.autor){
+        this.buscarLibro(id).autor = nuevosDatos.autor;
+      }
+      if(nuevosDatos.anio){
+        this.buscarLibro(id)?.anio = nuevosDatos.anio;
+      }
+
+    }
+  }
 
   // 13. Método eliminarLibro(id: number): void.
   //     Quita el libro de la lista. Si no existe, avisa.
