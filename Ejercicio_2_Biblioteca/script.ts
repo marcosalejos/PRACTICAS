@@ -74,7 +74,7 @@ class Libro {
   //    "[2] 1984 - George Orwell (1949) - ❌ Prestado"
 
   describir(): string {
-    return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.consultarDisponibilidad()}`;
+    return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.disponible ? "Disponible" : "Prestado"}`;
   }
 
   consultarDisponibilidad(): string {
@@ -151,6 +151,7 @@ class Biblioteca {
         return this.libros[i]; // Se accede al id del Libro ubicado en la posición i del array libros.
       } // === Igualdad estricta, compara valor y tipo -> 6 es distinto (!==) de "6"
     }
+
     return null; // En caso de que no se haya encontrado ningún libro en el for, se devuelve null
   }
 
