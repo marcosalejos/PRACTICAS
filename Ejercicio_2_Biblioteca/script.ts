@@ -78,16 +78,16 @@ class Libro {
   }
 
   consultarDisponibilidad(): string {
-    // El ternario quedaría así:
-    let resultado: string; // return this.disponible ? 'Disponible' : 'Prestado';
+    // // El ternario quedaría así:
+    // let resultado: string; // return this.disponible ? 'Disponible' : 'Prestado';
 
     if (this.disponible) {
-      resultado = "Disponible";
+      return "Disponible";
     } else {
-      resultado = "Prestado";
+      return "Prestado";
     }
 
-    return resultado;
+    // return resultado;
   }
 }
 
