@@ -48,7 +48,7 @@ class Libro {
   // 4. Método prestar(): no devuelve nada (investiga el tipo "void").
   //    Si el libro ya está prestado, avisa por consola. Si no, cambia "disponible" a false.
 
-  prestar(): void {
+  public prestar(): void {
     if (!this.disponible) {
       console.log("El libro ya está prestado");
     } else {
@@ -60,7 +60,7 @@ class Libro {
   // 5. Método devolver(): también void.
   //    Si el libro ya está disponible, avisa por consola. Si no, cambia "disponible" a true.
 
-  devolver(): void {
+  public devolver(): void {
     if (this.disponible) {
       console.log("El libro ya estaba disponible");
     } else {
@@ -73,7 +73,7 @@ class Libro {
   //    "[1] El Quijote - Miguel de Cervantes (1605) - ✅ Disponible"
   //    "[2] 1984 - George Orwell (1949) - ❌ Prestado"
 
-  describir(): string {                                                 // Comprobar si está disponible con un ternario
+  public describir(): string {                                                 // Comprobar si está disponible con un ternario
     return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.disponible ? "Disponible" : "Prestado"}`;
   }     
 }
@@ -130,7 +130,7 @@ class Biblioteca {
   //    El tipo de retorno debe reflejar las dos posibilidades (investiga "Libro | null").
   //    (Empieza por este: casi todos los demás lo van a usar.)
 
-  buscarLibro(id: number): Libro | null {
+  public buscarLibro(id: number): Libro | null {
     for (let i = 0; i < this.libros.length; i++) {
       if (this.libros[i].id === id) {
         // .id: acceder a una propiedad de un objeto
@@ -154,7 +154,7 @@ class Biblioteca {
   // 10. Método agregarLibro(libro: Libro): void.
   //     Si ya existe un libro con ese id, avisa y no lo añadas. Si no, añádelo a la lista.
 
-  agregarLibro(libro: Libro): void {
+  public agregarLibro(libro: Libro): void {
     this.buscarLibro(libro.id)
       ? console.log("Ya existe un libro con ese ID")
       : this.libros.push(libro);
@@ -164,7 +164,7 @@ class Biblioteca {
   // 11. Método listarLibros(): void.
   //     Si no hay libros, muestra un mensaje. Si hay, muestra el describir() de cada uno.
 
-  listarLibros(): void{
+  public listarLibros(): void{
     this.libros.length === 0 
     ? console.log('No hay libros en la biblioteca') 
     : this.libros.forEach(libro => console.log(libro.describir()));
@@ -177,7 +177,7 @@ class Biblioteca {
   //     Cambia solo los campos que vengan (los que no vengan serán undefined).
   //     Si el libro no existe, avisa.
 
-  actualizarLibro(id: number, nuevosDatos: DatosLibro): void{
+  public actualizarLibro(id: number, nuevosDatos: DatosLibro): void{
     /* Guardamos en libroActualizado el propio libro encontrado en el método buscarLibro(), no es una copia, es una referencia al
     propio Libro, por lo que al modificar libroActualizado se modifica el Libro encontrado en el array libros */
     let libroActualizado = this.buscarLibro(id);
@@ -200,9 +200,37 @@ class Biblioteca {
   // 13. Método eliminarLibro(id: number): void.
   //     Quita el libro de la lista. Si no existe, avisa.
 
+  public eliminarLibro(id: number): void{
+    /* Guardar el número de indice en una variable. El método .findIndex() recibe por parámetro una función, la cual aplica a cada elemento
+     del array. Se genera una función flecha que compara el id pasado por parámetro en eliminarLibro(id) con el de cada Libro de la lista libros,
+     si lo encuentra devuelve su posición y si no devuelve -1. Si lo encuentra detiene el bucle de búsqueda, es decir, si hubiesen dos ID
+     repetidas solo nos daría la posición del primero que encuentra */  
+    let numeroIndice: number = this.libros.findIndex(libro => libro.id === id);
+
+    // Método .splice() -> elimina elementos en el array desde la posición del 1º param. e indicamos cuantos elementos queremos eliminar con el 2º param.
+    numeroIndice === -1 ? console.log('El libro no ha sido eliminado porque no existe') : this.libros.splice(numeroIndice, 1)
+  }
+
   // 14. Método cambiarDisponibilidad(id: number, disponible: boolean): void.
   //     Si "disponible" es false, presta el libro; si es true, lo devuelve.
   //     Reutiliza prestar() y devolver(). Si el libro no existe, avisa.
+
+  public cambiarDisponibilidad(id: number, disponible: boolean): void{
+    let libroDisponibilidad = this.buscarLibro(id);
+
+    if (libroDisponibilidad === null){
+      console.log('El libro no existe');
+    }else{
+      if (disponible){
+        libroDisponibilidad.devolver();
+      }else{
+        libroDisponibilidad.prestar();
+      }
+    }
+  }
+  // Si quiero cambiar la disponibilidad ha False es porque el libro está disponible (True), se presta y se cambia la disponibilidad a False
+  // Si quiero cambiar la disponibilidad ha True es porque el libro está prestado y no está disponible (False), se devuelve y se cambia la disponibilidad a True
+
 }
 
 // ─────────────────────────────────── PRUEBA ───────────────────────────────────
