@@ -178,19 +178,22 @@ class Biblioteca {
   //     Si el libro no existe, avisa.
 
   actualizarLibro(id: number, nuevosDatos: DatosLibro): void{
-    if (this.buscarLibro(id) === null){
+    /* Guardamos en libroActualizado el propio libro encontrado en el método buscarLibro(), no es una copia, es una referencia al
+    propio Libro, por lo que al modificar libroActualizado se modifica el Libro encontrado en el array libros */
+    let libroActualizado = this.buscarLibro(id);
+
+    if (libroActualizado === null){
       console.log('El libro que se quiere actualizar no existe')
     }else{
-      if (nuevosDatos.titulo){
-        this.buscarLibro(id).titulo = nuevosDatos.titulo;
+      if (nuevosDatos.titulo !== undefined){
+        libroActualizado.titulo = nuevosDatos.titulo;
       }
-      if(nuevosDatos.autor){
-        this.buscarLibro(id).autor = nuevosDatos.autor;
+      if(nuevosDatos.autor !== undefined){
+        libroActualizado.autor = nuevosDatos.autor;
       }
-      if(nuevosDatos.anio){
-        this.buscarLibro(id)?.anio = nuevosDatos.anio;
+      if(nuevosDatos.anio !== undefined){
+        libroActualizado.anio = nuevosDatos.anio;
       }
-
     }
   }
 
