@@ -73,10 +73,9 @@ class Libro {
   //    "[1] El Quijote - Miguel de Cervantes (1605) - ✅ Disponible"
   //    "[2] 1984 - George Orwell (1949) - ❌ Prestado"
 
-  public describir(): string {
-    // Comprobar si está disponible con un ternario
+  public describir(): string {                                                 // Comprobar si está disponible con un ternario
     return `[${this.id}] ${this.titulo} - ${this.autor} (${this.anio}) - ${this.disponible ? "Disponible" : "Prestado"}`;
-  }
+  }     
 }
 
 // 👉 Antes de seguir, prueba aquí tu clase Libro: crea un libro, muéstralo con
@@ -143,34 +142,34 @@ class Biblioteca {
   // 11. Método listarLibros(): void.
   //     Si no hay libros, muestra un mensaje. Si hay, muestra el describir() de cada uno.
 
-  public listarLibros(): void {
-    this.libros.length === 0
-      ? console.log("No hay libros en la biblioteca")
-      : this.libros.forEach((libro) => console.log(libro.describir()));
+  public listarLibros(): void{
+    this.libros.length === 0 
+    ? console.log('No hay libros en la biblioteca') 
+    : this.libros.forEach(libro => console.log(libro.describir()));
   }
-  // Se comprueba si la lista está vacía mediante su longitud, no existe el método .isEmpty()
-  // Se recorre la lista mediante forEach, el cual espera una función (flecha) que ejecuta en cada libro de la lista.
+    // Se comprueba si la lista está vacía mediante su longitud, no existe el método .isEmpty()
+    // Se recorre la lista mediante forEach, el cual espera una función (flecha) que ejecuta en cada libro de la lista.
 
   // 12. Método actualizarLibro(id: number, nuevosDatos: DatosLibro): void.
   //     nuevosDatos es un objeto, por ejemplo { titulo: "Otro título", anio: 2001 }.
   //     Cambia solo los campos que vengan (los que no vengan serán undefined).
   //     Si el libro no existe, avisa.
 
-  public actualizarLibro(id: number, nuevosDatos: DatosLibro): void {
+  public actualizarLibro(id: number, nuevosDatos: DatosLibro): void{
     /* Guardamos en libroActualizado el propio libro encontrado en el método buscarLibro(), no es una copia, es una referencia al
     propio Libro, por lo que al modificar libroActualizado se modifica el Libro encontrado en el array libros */
     let libroActualizado = this.buscarLibro(id);
 
-    if (libroActualizado === null) {
-      console.log("El libro que se quiere actualizar no existe");
-    } else {
-      if (nuevosDatos.titulo !== undefined) {
+    if (libroActualizado === null){
+      console.log('El libro que se quiere actualizar no existe')
+    }else{
+      if (nuevosDatos.titulo !== undefined){
         libroActualizado.titulo = nuevosDatos.titulo;
       }
-      if (nuevosDatos.autor !== undefined) {
+      if(nuevosDatos.autor !== undefined){
         libroActualizado.autor = nuevosDatos.autor;
       }
-      if (nuevosDatos.anio !== undefined) {
+      if(nuevosDatos.anio !== undefined){
         libroActualizado.anio = nuevosDatos.anio;
       }
     }
@@ -179,41 +178,37 @@ class Biblioteca {
   // 13. Método eliminarLibro(id: number): void.
   //     Quita el libro de la lista. Si no existe, avisa.
 
-  public eliminarLibro(id: number): void {
+  public eliminarLibro(id: number): void{
     /* Guardar el número de indice en una variable. El método .findIndex() recibe por parámetro una función, la cual aplica a cada elemento
      del array. Se genera una función flecha que compara el id pasado por parámetro en eliminarLibro(id) con el de cada Libro de la lista libros,
      si lo encuentra devuelve su posición y si no devuelve -1. Si lo encuentra detiene el bucle de búsqueda, es decir, si hubiesen dos ID
-     repetidas solo nos daría la posición del primero que encuentra */
-    let numeroIndice: number = this.libros.findIndex(
-      (libro) => libro.id === id,
-    );
+     repetidas solo nos daría la posición del primero que encuentra */  
+    let numeroIndice: number = this.libros.findIndex(libro => libro.id === id);
 
     // Método .splice() -> elimina elementos en el array desde la posición del 1º param. e indicamos cuantos elementos queremos eliminar con el 2º param.
-    numeroIndice === -1
-      ? console.log("El libro no ha sido eliminado porque no existe")
-      : this.libros.splice(numeroIndice, 1);
+    numeroIndice === -1 ? console.log('El libro no ha sido eliminado porque no existe') : this.libros.splice(numeroIndice, 1)
   }
 
   // 14. Método cambiarDisponibilidad(id: number, disponible: boolean): void.
   //     Si "disponible" es false, presta el libro; si es true, lo devuelve.
   //     Reutiliza prestar() y devolver(). Si el libro no existe, avisa.
 
-  public cambiarDisponibilidad(id: number, disponible: boolean): void {
+  public cambiarDisponibilidad(id: number, disponible: boolean): void{
     let libroDisponibilidad = this.buscarLibro(id);
 
-    if (libroDisponibilidad === null) {
-      console.log("El libro no existe");
-    } else {
-      // if (disponible){
-      //   libroDisponibilidad.devolver();
-      // }else{
-      //   libroDisponibilidad.prestar();
-      // }
-      libroDisponibilidad.disponible != libroDisponibilidad.disponible;
+    if (libroDisponibilidad === null){
+      console.log('El libro no existe');
+    }else{
+      if (disponible){
+        libroDisponibilidad.devolver();
+      }else{
+        libroDisponibilidad.prestar();
+      }
     }
   }
   // Si quiero cambiar la disponibilidad ha False es porque el libro está disponible (True), se presta y se cambia la disponibilidad a False
   // Si quiero cambiar la disponibilidad ha True es porque el libro está prestado y no está disponible (False), se devuelve y se cambia la disponibilidad a True
+
 }
 
 // ─────────────────────────────────── PRUEBA ───────────────────────────────────
@@ -283,11 +278,28 @@ console.log("");
 
 console.log('7. Actualiza un libro y vuelve a listar.')
 
+let paramModificados: DatosLibro = {titulo: "Mil años de soledad"};
+biblio.actualizarLibro(3, paramModificados);
+biblio.listarLibros();
 
+console.log("");
 
 //     8. Elimina un libro y vuelve a listar.
+
+console.log('8. Elimina un libro y vuelve a listar.')
+
+biblio.eliminarLibro(2)
+biblio.listarLibros()
+
+console.log("")
+
 //     9. Intenta buscar, actualizar o eliminar un id que no existe.
 
+console.log('9. Intenta buscar, actualizar o eliminar un id que no existe.')
+
+biblio.buscarLibro(6);
+biblio.actualizarLibro(7, paramModificados);
+biblio.eliminarLibro(5);
 
 
 // Variable para asignar ID
