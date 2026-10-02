@@ -83,29 +83,7 @@ class Libro {
 //    describir(), préstalo y vuelve a mostrarlo. Prueba también a pasarle un texto
 //    donde va el año y fíjate en el error que te marca TypeScript.
 //    Cuando funcione, puedes borrar esta prueba o dejarla comentada.
-/*
-// Variable para asignar ID
-let contador = 0;
 
-// Libro1
-let libro1 = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);
-console.log(libro1.describir());
-libro1.prestar();
-console.log(libro1.describir());
-
-// Libro2
-let libro2 = new Libro(asignarID(), "1984", "George Orwell", 1949);
-console.log(libro2.describir())
-
-//Libro3
-let libro3 = new Libro(asignarID(), "Título libro3", "Agustin", 2015);
-console.log(libro3.describir())
-
-// Función para asignar ID
-function asignarID(): number{
-    return contador +=1
-}
-*/
 
 // ───────────────────────────── CLASE BIBLIOTECA ─────────────────────────────
 
@@ -242,13 +220,80 @@ class Biblioteca {
 
 // 15. Escribe aquí la prueba del paso 5 del enunciado. Pon un console.log("--- Paso X ---")
 //     antes de cada paso para que la consola se lea bien:
-console.log("Hola biblioteca");
+
 //     1. Crea una biblioteca.
+
+console.log('1. Crea una biblioteca.');
+
+let biblio: Biblioteca = new Biblioteca ('Biblioteca Molona');
+
+console.log("");
+
 //     2. Crea al menos 4 libros y añádelos.
+
+console.log('2. Crea al menos 4 libros y añádelos.');
+
+let libro1: Libro = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);
+let libro2: Libro = new Libro(asignarID(), "1984", "George Orwell", 1949);
+let libro3: Libro = new Libro(asignarID(), "Cien años de soledad", "Gabriel García Márquez", 1967);
+let libro4: Libro = new Libro(asignarID(), "Ficciones", "Jorge Luis Borges", 1944);
+
+  // Agregar libros nuevos con un forEach recorriendo la array de agregarNuevosLibros
+let agregarNuevosLibros: Libro []= [libro1, libro2, libro3, libro4];
+
+agregarNuevosLibros.forEach(libro => biblio.agregarLibro(libro));
+
+console.log("");
+
 //     3. Intenta añadir un libro con un id repetido.
+
+console.log('3. Intenta añadir un libro con un id repetido.');
+let libro5: Libro = new Libro(2, "Pedro Páramo", "Juan Rulfo", 1955);
+biblio.agregarLibro(libro5);
+
+console.log("");
+
 //     4. Lista los libros.
+
+console.log("4. Lista los libros.");
+
+biblio.listarLibros();
+
+console.log("");
+
 //     5. Presta un libro con cambiarDisponibilidad() y vuelve a listar.
+
+console.log('5. Presta un libro con cambiarDisponibilidad() y vuelve a listar.');
+
+biblio.cambiarDisponibilidad(1, false);
+biblio.listarLibros();
+
+console.log("");
+
 //     6. Intenta prestar otra vez el mismo libro.
+
+console.log('6. Intenta prestar otra vez el mismo libro.')
+
+biblio.cambiarDisponibilidad(1, false);
+biblio.listarLibros();
+
+console.log("");
+
 //     7. Actualiza un libro y vuelve a listar.
+
+console.log('7. Actualiza un libro y vuelve a listar.')
+
+
+
 //     8. Elimina un libro y vuelve a listar.
 //     9. Intenta buscar, actualizar o eliminar un id que no existe.
+
+
+
+// Variable para asignar ID
+let contador = 0;
+
+//Función para asignar ID
+function asignarID(): number{
+    return contador +=1
+}
