@@ -115,7 +115,7 @@ class Biblioteca {
         return this.libros[i]; // Se accede al id del Libro ubicado en la posición i del array libros.
       } // === Igualdad estricta, compara valor y tipo -> 6 es distinto (!==) de "6"
     }
-
+    
     return null; // En caso de que no se haya encontrado ningún libro en el for, se devuelve null
   }
 
@@ -221,12 +221,21 @@ class Biblioteca {
 console.log('1. Crea una biblioteca.');
 
 let biblio: Biblioteca = new Biblioteca ('Biblioteca Molona');
+console.log(biblio.nombre);
 
 console.log("");
 
 //     2. Crea al menos 4 libros y añádelos.
 
 console.log('2. Crea al menos 4 libros y añádelos.');
+
+// Variable para asignar ID
+let contador = 0;
+
+//Función para asignar ID
+function asignarID(): number{
+    return contador +=1
+}
 
 let libro1: Libro = new Libro(asignarID(), "El Quijote", "Miguel de Cervantes", 1605);
 let libro2: Libro = new Libro(asignarID(), "1984", "George Orwell", 1949);
@@ -235,15 +244,16 @@ let libro4: Libro = new Libro(asignarID(), "Ficciones", "Jorge Luis Borges", 194
 
   // Agregar libros nuevos con un forEach recorriendo la array de agregarNuevosLibros
 let agregarNuevosLibros: Libro []= [libro1, libro2, libro3, libro4];
-
 agregarNuevosLibros.forEach(libro => biblio.agregarLibro(libro));
+
+biblio.listarLibros();
 
 console.log("");
 
 //     3. Intenta añadir un libro con un id repetido.
 
 console.log('3. Intenta añadir un libro con un id repetido.');
-let libro5: Libro = new Libro(2, "Pedro Páramo", "Juan Rulfo", 1955);
+let libro5: Libro = new Libro(3, "Pedro Páramo", "Juan Rulfo", 1955);
 biblio.agregarLibro(libro5);
 
 console.log("");
@@ -278,7 +288,7 @@ console.log("");
 
 console.log('7. Actualiza un libro y vuelve a listar.')
 
-let paramModificados: DatosLibro = {titulo: "Mil años de soledad"};
+let paramModificados: DatosLibro = {titulo: "Título actualizado"};
 biblio.actualizarLibro(3, paramModificados);
 biblio.listarLibros();
 
@@ -301,11 +311,12 @@ biblio.buscarLibro(6);
 biblio.actualizarLibro(7, paramModificados);
 biblio.eliminarLibro(5);
 
+console.log("");
 
-// Variable para asignar ID
-let contador = 0;
+//     10. Agregar un nuevo libro.
 
-//Función para asignar ID
-function asignarID(): number{
-    return contador +=1
-}
+console.log('10. Agregar un nuevo libro.')
+
+let libro6: Libro = new Libro(asignarID(), "Pedro Páramo", "Juan Rulfo", 1955);
+biblio.agregarLibro(libro6);
+biblio.listarLibros();
