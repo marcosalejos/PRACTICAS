@@ -7,16 +7,41 @@
 
 // 1. Escribe como FUNCIONES FLECHA (con su tipo) y pruébalas con console.log():
 //    - esPar(n)            → devuelve si n es par (investiga el operador %).
+const esPar = (n: number): string => n % 2 === 0 ? "Es par": "Es impar";
+console.log(esPar(11))
+
 //    - saludar(nombre)     → devuelve "Hola, <nombre>".
+const saludar = (nombre: string): string => `Hola, <${nombre}>`;
+console.log(saludar("Agustín"))
+
 //    - precioConIva(precio) → devuelve el precio con un 21 % de IVA.
+const precioConIva = (precio: number): number => (precio * 0.21) + precio;
+console.log(precioConIva(10));
 
 // 2. Con esta lista, y usando SOLO métodos de arrays con lambdas:
 const numeros: number[] = [3, 8, 12, 5, 20, 7];
+
 //    - Saca los pares usando tu lambda esPar (numeros.filter(esPar)).
+const pares = numeros.filter(x => x % 2 === 0);
+console.log(pares);
+
 //    - Saca una lista con cada número al cuadrado (map).
+const cuadrados = numeros.map(x => x * x);
+console.log(cuadrados);
+
 //    - Busca el primer número mayor que 10 (find).
+const mayor10 = numeros.find(x => x > 10);
+console.log(mayor10);
+
 //    - Comprueba si alguno es negativo (some) y si todos son menores que 100 (every).
+const esNegativo = numeros.some(x => x < 0);
+const menores100 = numeros.every(x => x < 100);
+console.log(`¿Hay algún número negativo en números? ${esNegativo}, ¿Todos son menores que 100? ${menores100}`);
+
 //    - Calcula la suma de todos (reduce, ¡no olvides el valor inicial!).
+//const sumaTodos = numeros.reduce((x, y) => x + y);
+const sumaTodos = numeros.reduce((x, y) => x + y, 0); // 0 -> es el valor inicial, evita que si la lista viene vacía de error
+console.log(sumaTodos);
 
 // 3. Escribe la lambda aplicar(n, operacion), donde operacion es de tipo
 //    (x: number) => number, que devuelva el resultado de aplicar operacion a n.
