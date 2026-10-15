@@ -47,12 +47,21 @@ console.log(sumaTodos);
 //    (x: number) => number, que devuelva el resultado de aplicar operacion a n.
 //    Llámala con al menos tres lambdas distintas.
 
+const aplicar = (n: number, operacion: (x: number) => number): number => operacion(n);
+
+console.log(aplicar(5, x => x * 2));
+console.log(aplicar(5, x => x ** 2));  
+console.log(aplicar(5, x => x - 3));      
+console.log(aplicar(5, x => -x));
+
 // 👉 No sigas hasta que todo el calentamiento funcione.
 //    Cuando funcione, puedes dejarlo comentado para que no ensucie la consola.
 
 // ──────────────────────────── TIPO CATEGORIA ────────────────────────────
 
 // 4. Declara el tipo Categoria, que solo admita "alimentacion", "bebidas" o "limpieza".
+
+type Categoria = "alimentacion" | "bebidas" | "limpieza";
 
 // ─────────────────────────────── CLASE PRODUCTO ───────────────────────────────
 
@@ -63,46 +72,119 @@ console.log(sumaTodos);
 //    - precio    → number
 //    - stock     → number
 
+class Producto{
+    readonly id: number;
+    nombre: string;
+    categoria: Categoria;
+    precio: number;
+    stock: number;
+
+
 // 6. Crea su constructor. Recibe los cinco datos y los guarda con "this".
+
+    constructor(id: number, nombre: string, categoria: Categoria, precio: number, stock: number){
+        this.id = id;
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.precio = precio;
+        this.stock = stock;
+    }
 
 // 7. Método describir(): string, por ejemplo:
 //    "[3] Leche (alimentacion) - 1.15 € - 24 uds"   (investiga toFixed(2))
 
+public describir(): string{
+    return `[${this.id}] ${this.nombre} (${this.categoria}) - ${this.precio.toFixed(2)} € - ${this.stock} uds`
+}
+
 // 8. Método estaAgotado(): boolean → true si el stock es 0. Cabe en una línea.
+
+public estaAgotado(): boolean{
+    return this.stock === 0 ? true : false  // Se puede hacer simplemente así: return this.stock === 0, evalua la comparación y devuelve true o false
+}
+}
 
 // ──────────────────────────── INTERFAZ DATOSPRODUCTO ────────────────────────────
 
 // 9. Declara la interfaz DatosProducto con nombre, categoria y precio, los tres OPCIONALES.
 //    ⚠️ Sin stock: el stock solo cambia vendiendo o reponiendo.
 
+interface DatosProducto{
+    nombre?: string;
+    categoria?: Categoria;
+    precio?: number;
+}
+
 // ──────────────────────────── VALIDACIONES (LAMBDAS) ────────────────────────────
 
 // 10. Escribe estas tres funciones flecha. Cada una recibe un dato y devuelve un boolean,
 //     y todas caben en una línea:
 //     - nombreValido(nombre)     → no está vacío ni es solo espacios (investiga trim()).
+
+const nombreValido = (nombre: string): boolean => nombre.trim() !== ""; // true nombreValido
+
 //     - precioValido(precio)     → es mayor que 0.
+
+const precioValido = (precio: number): boolean => precio > 0;
+
 //     - cantidadValida(cantidad) → es un entero (Number.isInteger()) y mayor o igual que 0.
+
+const cantidadValida = (cantidad: number): boolean => Number.isInteger(cantidad) && cantidad >= 0;
 
 // ───────────────────────────── CLASE INVENTARIO ─────────────────────────────
 
 // 11. Declara la clase Inventario con:
+
+class Inventario{
+
 //     - una lista PRIVADA de Producto, que empieza vacía.
+    private productos: Producto[] = [];
+
 //     - un contador PRIVADO siguienteId, que empieza en 1.
+    private siguienteId: number = 1;
 
 // ── GESTIÓN ──
 // Estos métodos pueden avisar por consola cuando algo falla, y devuelven null / false.
 
 // 12. obtenerProducto(id: number): Producto | null
 //     Con find() y una lambda. Convierte el undefined en null con ??.
+/*El método .find() recorre la lista productod y devuelve el Producto con el mismo id que el pasado por parámetro en la función.
+    Si no encuentra ningún Producto devuelve undefined, el operador ?? convierte undefined en null.*/
+
+    public obtenerProducto(id: number): Producto | null{
+        return this.productos.find(producto => producto.id === id) ?? null;
+    }
 
 // 13. agregarProducto(nombre: string, categoria: Categoria, precio: number, stock: number): Producto | null
 //     - Valida nombre, precio y stock con tus lambdas.
 //     - Comprueba con some() que no exista ya ese nombre (sin importar mayúsculas).
 //     - Crea el Producto con this.siguienteId, súmale 1 al contador, guárdalo y DEVUÉLVELO.
+public agregarProducto(nombre: string, categoria: Categoria, precio: number, stock: number): Producto | null{
+
+    // Crear el nombre todo en minúsculas y sin espacios
+    const nombreMinuscula: string = nombre.toLowerCase().trim();  
+
+    if (!nombreValido(nombre) || !precioValido(precio) || !cantidadValida(stock)){
+        console.log("Los datos nombre, precio o stock no son correctos");
+        return null;
+
+    }else if(this.productos.some(producto => producto.nombre === nombreMinuscula)){
+        console.log("El nombre del producto ya existe");
+        return null;
+
+    }else{
+        const producto: Producto = new Producto(this.siguienteId, nombreMinuscula, categoria, precio, stock);
+        this.siguienteId++;
+        this.productos.push(producto);
+        return producto;
+    }
+}
 
 // 14. actualizarProducto(id: number, datos: DatosProducto): boolean
 //     Primero comprueba TODO (que exista y que los campos que vengan sean válidos)
 //     y solo después cambia los campos que vengan.
+
+
 
 // 15. eliminarProducto(id: number): boolean
 //     Hazlo con filter(). ¿Cómo sabes si se ha borrado algo? Compara longitudes.
@@ -145,7 +227,7 @@ console.log(sumaTodos);
 //     - Usa filtrarPorCategoria() + forEach() para rebajar el precio.
 //     - Redondea a 2 decimales: Math.round(precio * 100) / 100.
 //     - Devuelve cuántos productos se han rebajado.
-
+}
 // ─────────────────────────────────── PRUEBA ───────────────────────────────────
 
 // 29. Crea la lambda de ayuda mostrarLista(titulo: string, lista: Producto[]): void
