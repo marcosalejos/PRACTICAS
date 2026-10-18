@@ -3,44 +3,6 @@
 // Recuerda: deja "tsc --watch" corriendo en la terminal para que cada vez que guardes
 // se genere script.js automáticamente. El resultado lo verás en la consola (F12).
 // Ten abierto el ejercicio 2: Producto se parece a Libro e Inventario a Biblioteca.
-// ─────────────────────────── CALENTAMIENTO: LAMBDAS ───────────────────────────
-// 1. Escribe como FUNCIONES FLECHA (con su tipo) y pruébalas con console.log():
-//    - esPar(n)            → devuelve si n es par (investiga el operador %).
-const esPar = (n) => n % 2 === 0 ? "Es par" : "Es impar";
-console.log(esPar(11));
-//    - saludar(nombre)     → devuelve "Hola, <nombre>".
-const saludar = (nombre) => `Hola, <${nombre}>`;
-console.log(saludar("Agustín"));
-//    - precioConIva(precio) → devuelve el precio con un 21 % de IVA.
-const precioConIva = (precio) => (precio * 0.21) + precio;
-console.log(precioConIva(10));
-// 2. Con esta lista, y usando SOLO métodos de arrays con lambdas:
-const numeros = [3, 8, 12, 5, 20, 7];
-//    - Saca los pares usando tu lambda esPar (numeros.filter(esPar)).
-const pares = numeros.filter(x => x % 2 === 0);
-console.log(pares);
-//    - Saca una lista con cada número al cuadrado (map).
-const cuadrados = numeros.map(x => x * x);
-console.log(cuadrados);
-//    - Busca el primer número mayor que 10 (find).
-const mayor10 = numeros.find(x => x > 10);
-console.log(mayor10);
-//    - Comprueba si alguno es negativo (some) y si todos son menores que 100 (every).
-const esNegativo = numeros.some(x => x < 0);
-const menores100 = numeros.every(x => x < 100);
-console.log(`¿Hay algún número negativo en números? ${esNegativo}, ¿Todos son menores que 100? ${menores100}`);
-//    - Calcula la suma de todos (reduce, ¡no olvides el valor inicial!).
-//const sumaTodos = numeros.reduce((x, y) => x + y);
-const sumaTodos = numeros.reduce((x, y) => x + y, 0); // 0 -> es el valor inicial, evita que si la lista viene vacía de error
-console.log(sumaTodos);
-// 3. Escribe la lambda aplicar(n, operacion), donde operacion es de tipo
-//    (x: number) => number, que devuelva el resultado de aplicar operacion a n.
-//    Llámala con al menos tres lambdas distintas.
-const aplicar = (n, operacion) => operacion(n);
-console.log(aplicar(5, x => x * 2));
-console.log(aplicar(5, x => x ** 2));
-console.log(aplicar(5, x => x - 3));
-console.log(aplicar(5, x => -x));
 // ─────────────────────────────── CLASE PRODUCTO ───────────────────────────────
 // 5. Declara la clase Producto con sus propiedades y el TIPO de cada una:
 //    - id        → number, readonly
@@ -85,6 +47,8 @@ class Inventario {
         //     - un contador PRIVADO siguienteId, que empieza en 1.
         this.siguienteId = 1;
     }
+    //     - No hace falta crear un constructor, TypeScript crea uno vacio por defecto    
+    // constructor() {}
     // ── GESTIÓN ──
     // Estos métodos pueden avisar por consola cuando algo falla, y devuelven null / false.
     // 12. obtenerProducto(id: number): Producto | null
@@ -101,8 +65,16 @@ class Inventario {
     agregarProducto(nombre, categoria, precio, stock) {
         // Crear el nombre todo en minúsculas y sin espacios
         const nombreMinuscula = nombre.toLowerCase().trim();
-        if (!nombreValido(nombre) || !precioValido(precio) || !cantidadValida(stock)) {
-            console.log("Los datos nombre, precio o stock no son correctos");
+        if (!nombreValido(nombre)) {
+            console.log("El nombre no es correcto");
+            return null;
+        }
+        else if (!precioValido(precio)) {
+            console.log("El precio no es correcto");
+            return null;
+        }
+        else if (!cantidadValida(stock)) {
+            console.log("El stock no es correcto");
             return null;
         }
         else if (this.nombreRepetido(nombreMinuscula)) {
@@ -274,7 +246,7 @@ class Inventario {
     // 26. ordenarPorPrecio(ascendente: boolean): Producto[]
     //     → sort sobre una COPIA. Si ordenas this.productos directamente, desordenas el inventario.
     ordenarPorPrecio(ascendente) {
-        // this.obtenerTodos() es la copia del array reutilizando el método del punto 18
+        // this.obtenerTodos() es la copia del array reutilizando en el método del punto 18
         if (ascendente) {
             return this.obtenerTodos().sort((producto1, producto2) => producto1.precio - producto2.precio);
         }
@@ -314,19 +286,73 @@ class Inventario {
 // ─────────────────────────────────── PRUEBA ───────────────────────────────────
 // 29. Crea la lambda de ayuda mostrarLista(titulo: string, lista: Producto[]): void
 //     que muestre el título y el describir() de cada producto, o "(ninguno)" si está vacía.
+const mostrarLista = (titulo, lista) => {
+    console.log(titulo);
+    // Si la lista no está vacia
+    lista.length > 0
+        ? lista.forEach(producto => console.log(producto.describir()))
+        : console.log("(ninguno)");
+};
 // 30. Escribe aquí la prueba del paso 7 del enunciado. Pon un console.log("--- Paso X ---")
 //     antes de cada paso para que la consola se lea bien:
 //
 //      1. Crea un inventario y añade al menos 8 productos (alguno con stock 0).
+console.log("--- Paso 1 ---");
+let inventarioAgustino = new Inventario();
+inventarioAgustino.agregarProducto("Leche", "bebidas", 0.89, 23);
+inventarioAgustino.agregarProducto("Agua mineral", "bebidas", 0.45, 60);
+inventarioAgustino.agregarProducto("Zumo de naranja", "bebidas", 1.75, 0);
+inventarioAgustino.agregarProducto("Arroz", "alimentacion", 1.30, 40);
+inventarioAgustino.agregarProducto("Pasta", "alimentacion", 0.95, 4);
+inventarioAgustino.agregarProducto("Aceite de oliva", "alimentacion", 7.50, 12);
+inventarioAgustino.agregarProducto("Lejía", "limpieza", 1.20, 0);
+inventarioAgustino.agregarProducto("Detergente", "limpieza", 5.99, 18);
 //      2. Intenta añadir productos no válidos (nombre vacío, precio negativo,
 //         stock decimal, nombre repetido con otras mayúsculas).
+console.log("--- Paso 2 ---");
+inventarioAgustino.agregarProducto(" ", "bebidas", 1.75, 4);
+inventarioAgustino.agregarProducto("Aquarius", "bebidas", -1.75, 20);
+inventarioAgustino.agregarProducto("Jabón", "limpieza", 1.75, 10.8);
+inventarioAgustino.agregarProducto("PASTA", "alimentacion", 0.95, 4);
 //      3. Muestra todos los productos.
+console.log("--- Paso 3 ---");
+let productos = inventarioAgustino.obtenerTodos();
+mostrarLista("Inventario Agustino", productos);
 //      4. Muestra las bebidas, los de stock bajo (< 5) y los que contienen "le".
+console.log("--- Paso 4 ---");
+//Bebidas
+productos = inventarioAgustino.filtrarPorCategoria("bebidas");
+mostrarLista("Bebidas", productos);
+// stock bajo (< 5)
+productos = inventarioAgustino.stockBajo(5);
+mostrarLista("stock bajo (< 5)", productos);
+// contienen "le"
+productos = inventarioAgustino.buscarPorNombre("le");
+mostrarLista(`contienen "le"`, productos);
 //      5. Muestra los nombres, si hay agotados, si todos tienen stock y el valor total.
+console.log("--- Paso 5 ---");
+// Nombres
+console.log("Muestra los nombres");
+let nombres = inventarioAgustino.obtenerNombres();
+nombres.forEach(nombre => console.log(nombre));
+// Si hay agotados
+let agotados = inventarioAgustino.hayAgotados();
+console.log(`¿Hay agotados? ${agotados ? "SI" : "NO"}`);
+// Si todos tienen stock    
+console.log(`¿Todos tienen stock? ${inventarioAgustino.todosConStock() ? "SI" : "NO"}`);
+// valor total
+console.log(`Valor total del inventario: ${inventarioAgustino.valorTotal()}€`);
 //      6. Ordena por precio en los dos sentidos y comprueba que el original no ha cambiado.
+console.log("--- Paso 6 ---");
 //      7. Usa buscar() con al menos tres lambdas distintas.
+console.log("--- Paso 7 ---");
 //      8. Vende, intenta vender de más y repón uno agotado. ¿Sigue habiendo agotados?
+console.log("--- Paso 8 ---");
 //      9. Actualiza un precio e intenta actualizar otro con un precio no válido.
+console.log("--- Paso 9 ---");
 //     10. Aplica un 10 % de descuento a una categoría y muéstrala.
+console.log("--- Paso 10 ---");
 //     11. Elimina un producto e intenta eliminar, vender y actualizar un id que no existe.
+console.log("--- Paso 11 ---");
 //     12. Muestra el valor total al final.
+console.log("--- Paso 12 ---");

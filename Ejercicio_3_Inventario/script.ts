@@ -4,7 +4,7 @@
 // Ten abierto el ejercicio 2: Producto se parece a Libro e Inventario a Biblioteca.
 
 // ─────────────────────────── CALENTAMIENTO: LAMBDAS ───────────────────────────
-
+/*
 // 1. Escribe como FUNCIONES FLECHA (con su tipo) y pruébalas con console.log():
 //    - esPar(n)            → devuelve si n es par (investiga el operador %).
 const esPar = (n: number): string => n % 2 === 0 ? "Es par": "Es impar";
@@ -53,7 +53,7 @@ console.log(aplicar(5, x => x * 2));
 console.log(aplicar(5, x => x ** 2));  
 console.log(aplicar(5, x => x - 3));      
 console.log(aplicar(5, x => -x));
-
+*/
 // 👉 No sigas hasta que todo el calentamiento funcione.
 //    Cuando funcione, puedes dejarlo comentado para que no ensucie la consola.
 
@@ -143,6 +143,9 @@ class Inventario{
 //     - un contador PRIVADO siguienteId, que empieza en 1.
     private siguienteId: number = 1;
 
+//     - No hace falta crear un constructor, TypeScript crea uno vacio por defecto    
+    // constructor() {}
+
 // ── GESTIÓN ──
 // Estos métodos pueden avisar por consola cuando algo falla, y devuelven null / false.
 
@@ -164,9 +167,17 @@ class Inventario{
         // Crear el nombre todo en minúsculas y sin espacios
         const nombreMinuscula: string = nombre.toLowerCase().trim();  
 
-        if (!nombreValido(nombre) || !precioValido(precio) || !cantidadValida(stock)){
-            console.log("Los datos nombre, precio o stock no son correctos");
+        if (!nombreValido(nombre)){
+            console.log("El nombre no es correcto");
             return null;
+
+        }else if (!precioValido(precio)){
+            console.log("El precio no es correcto");
+            return null;    
+
+        }else if (!cantidadValida(stock)){
+            console.log("El stock no es correcto");
+            return null;    
 
         }else if(this.nombreRepetido(nombreMinuscula)){
             console.log("El nombre del producto ya existe");
@@ -388,7 +399,7 @@ Concatenar la letra mayúscula con el residuo */
 
     public ordenarPorPrecio(ascendente: boolean): Producto[]{
 
-        // this.obtenerTodos() es la copia del array reutilizando el método del punto 18
+        // this.obtenerTodos() es la copia del array reutilizando en el método del punto 18
         if (ascendente){
             return this.obtenerTodos().sort((producto1, producto2) => producto1.precio - producto2.precio);
 
@@ -441,21 +452,101 @@ Concatenar la letra mayúscula con el residuo */
 // 29. Crea la lambda de ayuda mostrarLista(titulo: string, lista: Producto[]): void
 //     que muestre el título y el describir() de cada producto, o "(ninguno)" si está vacía.
 
+const mostrarLista = (titulo: string, lista: Producto[]): void => {
 
+    console.log(titulo);
+
+    // Si la lista no está vacia
+    lista.length > 0
+    ? lista.forEach(producto => console.log(producto.describir()))
+    : console.log("(ninguno)");  
+};
 
 // 30. Escribe aquí la prueba del paso 7 del enunciado. Pon un console.log("--- Paso X ---")
 //     antes de cada paso para que la consola se lea bien:
 //
 //      1. Crea un inventario y añade al menos 8 productos (alguno con stock 0).
+
+console.log("--- Paso 1 ---")
+
+let inventarioAgustino: Inventario = new Inventario();
+
+inventarioAgustino.agregarProducto("Leche", "bebidas", 0.89, 23);
+inventarioAgustino.agregarProducto("Agua mineral", "bebidas", 0.45, 60);
+inventarioAgustino.agregarProducto("Zumo de naranja", "bebidas", 1.75, 0);
+inventarioAgustino.agregarProducto("Arroz", "alimentacion", 1.30, 40);
+inventarioAgustino.agregarProducto("Pasta", "alimentacion", 0.95, 4);
+inventarioAgustino.agregarProducto("Aceite de oliva", "alimentacion", 7.50, 12);
+inventarioAgustino.agregarProducto("Lejía", "limpieza", 1.20, 0);
+inventarioAgustino.agregarProducto("Detergente", "limpieza", 5.99, 18);
+
 //      2. Intenta añadir productos no válidos (nombre vacío, precio negativo,
 //         stock decimal, nombre repetido con otras mayúsculas).
+
+console.log("--- Paso 2 ---")
+
+inventarioAgustino.agregarProducto(" ", "bebidas", 1.75, 4);
+inventarioAgustino.agregarProducto("Aquarius", "bebidas", -1.75, 20);
+inventarioAgustino.agregarProducto("Jabón", "limpieza", 1.75, 10.8);
+inventarioAgustino.agregarProducto("PASTA", "alimentacion", 0.95, 4);
+
 //      3. Muestra todos los productos.
+
+console.log("--- Paso 3 ---")
+
+let productos: Producto [] = inventarioAgustino.obtenerTodos();
+mostrarLista("Inventario Agustino", productos);
+
 //      4. Muestra las bebidas, los de stock bajo (< 5) y los que contienen "le".
+
+console.log("--- Paso 4 ---")
+
+//Bebidas
+productos = inventarioAgustino.filtrarPorCategoria("bebidas");
+mostrarLista("Bebidas", productos);
+
+// stock bajo (< 5)
+productos = inventarioAgustino.stockBajo(5);
+mostrarLista("stock bajo (< 5)", productos);
+
+// contienen "le"
+productos = inventarioAgustino.buscarPorNombre("le");
+mostrarLista(`contienen "le"`, productos);
+
 //      5. Muestra los nombres, si hay agotados, si todos tienen stock y el valor total.
+
+console.log("--- Paso 5 ---")
+
+// Nombres
+console.log("Muestra los nombres")
+let nombres: string[] = inventarioAgustino.obtenerNombres();
+nombres.forEach(nombre => console.log(nombre));
+
+// Si hay agotados
+let agotados: boolean = inventarioAgustino.hayAgotados();
+console.log(`¿Hay agotados? ${agotados ? "SI" : "NO"}`); 
+
+// Si todos tienen stock    
+console.log(`¿Todos tienen stock? ${inventarioAgustino.todosConStock() ? "SI" : "NO"}`);
+
+// valor total
+console.log(`Valor total del inventario: ${inventarioAgustino.valorTotal()}€`);
+
 //      6. Ordena por precio en los dos sentidos y comprueba que el original no ha cambiado.
+
+console.log("--- Paso 6 ---")
+
+
+
 //      7. Usa buscar() con al menos tres lambdas distintas.
+console.log("--- Paso 7 ---")
 //      8. Vende, intenta vender de más y repón uno agotado. ¿Sigue habiendo agotados?
+console.log("--- Paso 8 ---")
 //      9. Actualiza un precio e intenta actualizar otro con un precio no válido.
+console.log("--- Paso 9 ---")
 //     10. Aplica un 10 % de descuento a una categoría y muéstrala.
+console.log("--- Paso 10 ---")
 //     11. Elimina un producto e intenta eliminar, vender y actualizar un id que no existe.
+console.log("--- Paso 11 ---")
 //     12. Muestra el valor total al final.
+console.log("--- Paso 12 ---")
