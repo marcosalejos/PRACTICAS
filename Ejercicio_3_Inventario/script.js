@@ -110,7 +110,7 @@ class Inventario {
                 return false;
             }
         }
-        // Comprobar precio
+        // Comprobar precio. mayor que 0
         if (datos.precio !== undefined) {
             if (!precioValido(datos.precio)) {
                 console.log("Precio no válido al actualizar el producto");
@@ -149,7 +149,7 @@ class Inventario {
         let productoVendido = this.obtenerProducto(id);
         // Validar producto
         if (productoVendido === null) {
-            console.log("El producto no existe");
+            console.log("El producto no se puede vender porque no existe");
             return false;
             // El producto existe 
         }
@@ -250,6 +250,7 @@ class Inventario {
         if (ascendente) {
             return this.obtenerTodos().sort((producto1, producto2) => producto1.precio - producto2.precio);
         }
+        // Descendente
         return this.obtenerTodos().sort((producto1, producto2) => producto2.precio - producto1.precio);
     }
     // Con ternario
@@ -344,15 +345,110 @@ console.log(`¿Todos tienen stock? ${inventarioAgustino.todosConStock() ? "SI" :
 console.log(`Valor total del inventario: ${inventarioAgustino.valorTotal()}€`);
 //      6. Ordena por precio en los dos sentidos y comprueba que el original no ha cambiado.
 console.log("--- Paso 6 ---");
+// Ascendente
+mostrarLista("Ascendente", inventarioAgustino.ordenarPorPrecio(true));
+// Descendente
+mostrarLista("Descendente", inventarioAgustino.ordenarPorPrecio(false));
+// Original
+mostrarLista("Original", inventarioAgustino.obtenerTodos());
 //      7. Usa buscar() con al menos tres lambdas distintas.
 console.log("--- Paso 7 ---");
+// Buscar productos Categoria = limpieza
+mostrarLista("Categoria = limpieza", inventarioAgustino.buscar(producto => producto.categoria === "limpieza"));
+// Buscar productos con stock = 0
+mostrarLista("Buscar productos sin stock", inventarioAgustino.buscar(producto => producto.stock === 0));
+// Buscar productos con precio mayor de 3€
+mostrarLista("Precio mayor de 3€", inventarioAgustino.buscar(producto => producto.precio > 3));
+// Buscar productos por nombre
+mostrarLista("Buscar por nombre", inventarioAgustino.buscar(producto => producto.nombre === "ArRoZ ".trim().toLowerCase()));
 //      8. Vende, intenta vender de más y repón uno agotado. ¿Sigue habiendo agotados?
 console.log("--- Paso 8 ---");
+// Vender
+let idProductoVendido = 8; // No existe 18  PRUEBA
+let productoVendido = inventarioAgustino.obtenerProducto(idProductoVendido);
+let cantidad = 12; // Vender de más 22  PRUEBA, Validar cantidad -12  PRUEBA
+// Comprobar si el producto existe
+if (productoVendido !== null) {
+    // Mostrar información del producto antes de su venta
+    console.log("Producto a vender:", productoVendido.describir());
+    // Ejecutar la venta 
+    if (inventarioAgustino.venderProducto(idProductoVendido, cantidad)) {
+        // Mostrar información del producto si se vende
+        console.log(`Venta realizada de ${cantidad} uds: ${productoVendido.describir()}`);
+        // Si el método .venderProducto() es false muestra la información del por qué
+    }
+}
+else {
+    console.log("El producto no existe");
+}
+// Reponer agotado       
+cantidad = 7;
+// Comprobar si hay agotados
+if (inventarioAgustino.hayAgotados()) {
+    // Buscar productos con stock = 0
+    mostrarLista("Mostrar productos sin stock", inventarioAgustino.buscar(producto => producto.stock === 0));
+    // Reponer los agotados
+    // Obtener productos sin stock en array agotados
+    let agotados = inventarioAgustino.buscar(producto => producto.stock === 0);
+    // Añadir la cantidad al stock de los productos obtenidos sin stock
+    agotados.forEach(producto => inventarioAgustino.reponerProducto(producto.id, cantidad));
+    // Volver a comprobar si hay productos agotados
+    inventarioAgustino.hayAgotados() ? console.log("Hay productos agotados") : console.log("No hay productos agotados");
+}
+else {
+    console.log("No hay productos agotados");
+}
 //      9. Actualiza un precio e intenta actualizar otro con un precio no válido.
 console.log("--- Paso 9 ---");
+let actualizarProducto = inventarioAgustino.obtenerProducto(5);
+if (actualizarProducto !== null) {
+    // Mostrar producto a actualizar
+    console.log(actualizarProducto.describir());
+    // Actualizar precio
+    inventarioAgustino.actualizarProducto(5, { precio: 1.2 });
+    console.log(actualizarProducto.describir());
+    // Precio no valido
+    inventarioAgustino.actualizarProducto(6, { precio: 0 });
+    // id no existe
+    inventarioAgustino.actualizarProducto(13, { precio: 2 });
+    // nombre no válido
+    inventarioAgustino.actualizarProducto(5, { nombre: "  " });
+    // nombre repetido en inventario
+    inventarioAgustino.actualizarProducto(6, { nombre: "PASTA" });
+}
+else {
+    console.log("El producto no existe");
+}
 //     10. Aplica un 10 % de descuento a una categoría y muéstrala.
 console.log("--- Paso 10 ---");
+let descuento = 10;
+// Original
+mostrarLista("Lista Categoria alimentación", inventarioAgustino.filtrarPorCategoria("alimentacion"));
+// Con descuento
+// Obtener cuantos productos se les ha aplicado el descuento, al ejecutar el método se modifican los precios del array original
+console.log(`Se les ha aplicado el descuento de un ${descuento}% a un total 
+            de ${inventarioAgustino.aplicarDescuento("alimentacion", descuento)} productos`);
+// Mostar productos de categoria con el descuento
+mostrarLista("Lista Categoria alimentación con descuento", inventarioAgustino.filtrarPorCategoria("alimentacion"));
 //     11. Elimina un producto e intenta eliminar, vender y actualizar un id que no existe.
 console.log("--- Paso 11 ---");
+// Eliminar producto
+// Mostrar lista original
+mostrarLista("Lista original", inventarioAgustino.obtenerTodos());
+// Eliminar id = 6
+inventarioAgustino.eliminarProducto(6)
+    ? console.log("Producto con id = 6 ha sido eliminado")
+    : console.log("Producto con id = 6 no se ha eliminado porque no existe");
+// Eliminar un id que no existe. Volver a eliminar el id = 6
+inventarioAgustino.eliminarProducto(6)
+    ? console.log("Producto con id = 6 ha sido eliminado")
+    : console.log("Producto con id = 6 no se ha eliminado porque no existe");
+// Vender un producto que no existe, id = 6
+inventarioAgustino.venderProducto(6, 12);
+// Actualizar un producto que no existe, id = 6    
+inventarioAgustino.actualizarProducto(6, { nombre: "Patata" });
+// Mostrar lista final
+mostrarLista("Lista final", inventarioAgustino.obtenerTodos());
 //     12. Muestra el valor total al final.
 console.log("--- Paso 12 ---");
+console.log(`El valor total del Inventario es de: ${inventarioAgustino.valorTotal()}€`);
